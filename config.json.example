@@ -1,0 +1,10 @@
+{
+   "folder":{
+      "destination":"",
+	  "temp":"/dev/shm"
+   },
+   "filename":{
+	   "prefix":"scan_"
+   },
+   "devicename":""
+}
