@@ -105,8 +105,8 @@ def send_to_pushover(source,jobtime,format,cf):
     os.system("convert -thumbnail 200 " + source + " " + thumbnailfile)
 
     r = requests.post("https://api.pushover.net/1/messages.json", data = {
-        "token": 'aj6ky1hs5i9cbt3uzyno8f4v2db7d6',
-        "user": 'u2ucjms27nh2xvx1m8hw8jrhc3tr5y',
+        "token": cf['pushover']['apikey'],
+        "user": cf['pushover']['userkey'],
 #            "html": 1,
 #            "priority": 1,
         "message": 'image scan_' + jobtime + '.' + format + ' scanned'

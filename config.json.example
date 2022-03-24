@@ -6,5 +6,10 @@
    "filename":{
 	   "prefix":"scan_"
    },
-   "devicename":""
+   "devicename":"",
+    "pushover":{
+	  "messages": 1,
+	  "apikey":"",
+      "userkey":""
+  }
 }
