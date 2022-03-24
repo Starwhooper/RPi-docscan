@@ -31,7 +31,7 @@ except:
 # Init Screen
 #
 #######################################################
-sys.path.append(os.path.split(os.path.abspath(__file__))[0] + '/waveshare144)
+sys.path.append(os.path.split(os.path.abspath(__file__))[0] + '/waveshare144')
 import LCD_1in44
 import LCD_Config
 
@@ -240,6 +240,7 @@ while 1:
             pdfmerge(cf,jobtime,document_jpg)
 
         format = 'pdf'
+        draw.rectangle((0,0,width,height), outline=0, fill=0)
         draw.text((0, 30), 'pushover message', fill = "YELLOW")
         disp.LCD_ShowImage(image,0,0)
         send_to_pushover(document_jpg[0],jobtime,format,cf)
