@@ -44,7 +44,3 @@ sudo git pull origin main
 ## Hardware ##
 ### Case ###
 Case to enclosure Raspberry Pi zero ans Waveshare 1.44inch LCD HAT_ https://www.thingiverse.com/thing:5324460
-
-### Case ###
-![Display](https://cdn.thingiverse.com/assets/b8/cf/98/25/7c/featured_preview_RPiRack_with_lcd_and_fan.png)
-Your can get the STL File and more details regarding the Hardware here: https://www.thingiverse.com/thing:4879316
