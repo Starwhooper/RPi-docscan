@@ -9,15 +9,16 @@
 #######################################################
 
 # -*- coding:utf-8 -*-
-import RPi.GPIO as GPIO
-import time
-import os
-from datetime import datetime
 from PIL import Image,ImageDraw,ImageFont,ImageColor
-import requests
-import json
-import sys
 from PyPDF2 import PdfFileMerger
+from datetime import datetime
+import RPi.GPIO as GPIO
+import json
+import os
+import requests
+import subprocess
+import sys
+import time
 
 ##### import config.json
 try:
@@ -34,7 +35,6 @@ except:
 sys.path.append(os.path.split(os.path.abspath(__file__))[0] + '/waveshare144')
 import LCD_1in44
 import LCD_Config
-
 
 KEY_UP_PIN     = 6 
 KEY_DOWN_PIN   = 19
@@ -133,8 +133,22 @@ def send_to_pushover(source,jobtime,format,cf):
 #
 #######################################################
 
-# try:
+
+
 while 1:
+    scannerfound = 0
+    while scannerfound == 0:
+        try:
+            scanner = subprocess.check_output("/usr/bin/scanimage -n --device-name='" + cf['devicename'] + "' --format=jpeg", shell=True)
+            scannerfound = 1
+        except:
+            scannerfound = 0
+        if scannerfound == 0:
+            draw.rectangle((0,0,width,height), outline=0, fill=0)
+            draw.text((0, 10), 'wait for scanner', fill = cf['color']['font'])
+            disp.LCD_ShowImage(image,0,0)
+            time.sleep(2)
+
     draw.rectangle((0,0,width,height), outline=0, fill=0)
     draw.text((0, 10), 'ready', fill = cf['color']['font'])
     draw.text((32, 30), 'A4 600dpi PNG ->', fill = cf['color']['font'])
