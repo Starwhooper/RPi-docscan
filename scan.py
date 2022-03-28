@@ -152,7 +152,7 @@ while 1:
         disp.LCD_ShowImage(image,0,0)
         document = cf['folder']['destination'] + "/" + cf["filename"]["prefix"] + "" + jobtime + ".jpg"
         format = 'jpg'
-        os.system("/usr/bin/scanimage > " + document + " --format=jpeg --resolution=300 --device-name='" + cf['devicename'] + "' -x 210 -y 297")
+        os.system("/usr/bin/scanimage > " + document + " --format=jpeg --resolution=300 --device-name='" + cf['devicename'] + "' -x " + cf['papersize']['x'] + " -y " + cf['papersize']['y'])
         draw.text((0, 30), 'pushover message', fill = cf['color']['font'])
         disp.LCD_ShowImage(image,0,0)
         send_to_pushover(document,jobtime,format,cf)
@@ -167,7 +167,7 @@ while 1:
         disp.LCD_ShowImage(image,0,0)
         document = cf['folder']['destination'] + "/" + cf["filename"]["prefix"] + "" + jobtime + ".png"
         format = 'png'
-        os.system("/usr/bin/scanimage > " + document + " --format=png --resolution=600 --device-name='" + cf['devicename'] + "' -x 210 -y 297")
+        os.system("/usr/bin/scanimage > " + document + " --format=png --resolution=600 --device-name='" + cf['devicename'] + "' -x " + cf['papersize']['x'] + " -y " + cf['papersize']['y'])
         draw.text((0, 30), 'pushover message', fill = cf['color']['font'])
         disp.LCD_ShowImage(image,0,0)
         send_to_pushover(document,jobtime,format,cf)
@@ -189,7 +189,7 @@ while 1:
                 document_jpg.append(cf['folder']['temp'] + "/" + cf["filename"]["prefix"] + "" + jobtime + "_" + str(i).zfill(2) + ".jpg")
             except:
                 document_jpg = [cf['folder']['temp'] + "/" + cf["filename"]["prefix"] + "" + jobtime + "_" + str(i).zfill(2) + ".jpg"]
-            os.system("/usr/bin/scanimage > " + document_jpg[i] + " --format=jpeg --resolution=300 --device-name='" + cf['devicename'] + "' -x 210 -y 297")
+            os.system("/usr/bin/scanimage > " + document_jpg[i] + " --format=jpeg --resolution=300 --device-name='" + cf['devicename'] + "' -x " + cf['papersize']['x'] + " -y " + cf['papersize']['y'])
             draw.rectangle((0,0,width,height), outline=0, fill=0)
             draw.text((0, 10), 'ready', fill = cf['color']['font'])
             draw.text((32, 30), '         next ->', fill = cf['color']['font'])
