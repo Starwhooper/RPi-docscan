@@ -89,13 +89,20 @@ draw = ImageDraw.Draw(image)
 #######################################################
 
 def scantime():
-    return(datetime.now().strftime("%Y%m%d-%H%M%S"))
+    return(datetime.now().strftime(cf['filename']['timestamp']))
 
 def pdfmerge(cf,jobtime,documente_jpg):
     merger = PdfFileMerger()
     for file in document_jpg:
         pdffile = file[0:-4] + '.pdf'
+        draw.rectangle((0,0,width,height), outline=0, fill=0)
+        draw.text((0, 0), 'merge', fill = cf['color']['font'])
+        draw.text((0, 10), os.path.basename(pdffile), fill = cf['color']['font'])
+        disp.LCD_ShowImage(image,0,0)
+        print('add ' + pdffile)
         merger.append(pdffile)
+
+    print('merge all to ' + cf['folder']['destination'] + '/' + cf['filename']['prefix'] + jobtime + ".pdf")
     merger.write(cf['folder']['destination'] + '/' + cf['filename']['prefix'] + jobtime + ".pdf")
     merger.close()
  
@@ -129,10 +136,10 @@ def send_to_pushover(source,jobtime,format,cf):
 # try:
 while 1:
     draw.rectangle((0,0,width,height), outline=0, fill=0)
-    draw.text((0, 10), 'ready', fill = "GREEN")
-    draw.text((32, 30), 'A4 600dpi PNG ->', fill = "GREEN")
-    draw.text((32, 60), 'A4 300dpi JPG ->', fill = "GREEN")
-    draw.text((32, 90), 'A4 300dpi PDF ->', fill = "GREEN")
+    draw.text((0, 10), 'ready', fill = cf['color']['font'])
+    draw.text((32, 30), 'A4 600dpi PNG ->', fill = cf['color']['font'])
+    draw.text((32, 60), 'A4 300dpi JPG ->', fill = cf['color']['font'])
+    draw.text((32, 90), 'A4 300dpi PDF ->', fill = cf['color']['font'])
     disp.LCD_ShowImage(image,0,0)
     time.sleep(1)
 
@@ -140,13 +147,13 @@ while 1:
     if GPIO.input(KEY2_PIN) == 0: # button is released
         jobtime = scantime()
         draw.rectangle((0,0,width,height), outline=0, fill=0)
-        draw.text((0, 0), jobtime, fill = "blue")
-        draw.text((0, 10), 'scan 300dpi jpg', fill = "YELLOW")
+        draw.text((0, 0), jobtime, fill = cf['color']['font'])
+        draw.text((0, 10), 'scan 300dpi jpg', fill = cf['color']['font'])
         disp.LCD_ShowImage(image,0,0)
         document = cf['folder']['destination'] + "/" + cf["filename"]["prefix"] + "" + jobtime + ".jpg"
         format = 'jpg'
         os.system("/usr/bin/scanimage > " + document + " --format=jpeg --resolution=300 --device-name='" + cf['devicename'] + "' -x 210 -y 297")
-        draw.text((0, 30), 'pushover message', fill = "YELLOW")
+        draw.text((0, 30), 'pushover message', fill = cf['color']['font'])
         disp.LCD_ShowImage(image,0,0)
         send_to_pushover(document,jobtime,format,cf)
 
@@ -154,14 +161,14 @@ while 1:
     if GPIO.input(KEY1_PIN) == 0: # button is released
         jobtime = scantime()
         draw.rectangle((0,0,width,height), outline=0, fill=0)
-        draw.text((0, 0), jobtime, fill = "blue")
+        draw.text((0, 0), jobtime, fill = cf['color']['font'])
         disp.LCD_ShowImage(image,0,0)
-        draw.text((0, 10), 'scan 600dpi png', fill = "YELLOW")
+        draw.text((0, 10), 'scan 600dpi png', fill = cf['color']['font'])
         disp.LCD_ShowImage(image,0,0)
         document = cf['folder']['destination'] + "/" + cf["filename"]["prefix"] + "" + jobtime + ".png"
         format = 'png'
         os.system("/usr/bin/scanimage > " + document + " --format=png --resolution=600 --device-name='" + cf['devicename'] + "' -x 210 -y 297")
-        draw.text((0, 30), 'pushover message', fill = "YELLOW")
+        draw.text((0, 30), 'pushover message', fill = cf['color']['font'])
         disp.LCD_ShowImage(image,0,0)
         send_to_pushover(document,jobtime,format,cf)
 
@@ -173,10 +180,10 @@ while 1:
 #        document_jpg = [0]
         jobtime = scantime()
         draw.rectangle((0,0,width,height), outline=0, fill=0)
-        draw.text((0, 0), jobtime, fill = "blue")
+        draw.text((0, 0), jobtime, fill = cf['color']['font'])
         while True:
-            draw.text((0, 10), 'scan 300dpi pdf', fill = "YELLOW")
-            draw.text((0, 20), 'page: ' + str(i+1), fill = "ORANGE")
+            draw.text((0, 10), 'scan 300dpi pdf', fill = cf['color']['font'])
+            draw.text((0, 20), 'page: ' + str(i+1), fill = cf['color']['font'])
             disp.LCD_ShowImage(image,0,0)
             try: 
                 document_jpg.append(cf['folder']['temp'] + "/" + cf["filename"]["prefix"] + "" + jobtime + "_" + str(i).zfill(2) + ".jpg")
@@ -184,9 +191,9 @@ while 1:
                 document_jpg = [cf['folder']['temp'] + "/" + cf["filename"]["prefix"] + "" + jobtime + "_" + str(i).zfill(2) + ".jpg"]
             os.system("/usr/bin/scanimage > " + document_jpg[i] + " --format=jpeg --resolution=300 --device-name='" + cf['devicename'] + "' -x 210 -y 297")
             draw.rectangle((0,0,width,height), outline=0, fill=0)
-            draw.text((0, 10), 'ready', fill = "GREEN")
-            draw.text((32, 30), '         next ->', fill = "GREEN")
-            draw.text((32, 60), '         done ->', fill = "GREEN")
+            draw.text((0, 10), 'ready', fill = cf['color']['font'])
+            draw.text((32, 30), '         next ->', fill = cf['color']['font'])
+            draw.text((32, 60), '         done ->', fill = cf['color']['font'])
             disp.LCD_ShowImage(image,0,0)
             time.sleep(1)
             while True:
@@ -205,9 +212,9 @@ while 1:
         while True:
  
             draw.rectangle((0,0,width,height), outline=0, fill=0)
-            draw.text((0, 10), 'OCR ?', fill = "YELLOW")
-            draw.text((32, 30), '          yes ->', fill = "GREEN")
-            draw.text((32, 60), '           no ->', fill = "GREEN")
+            draw.text((0, 10), 'OCR ?', fill = cf['color']['font'])
+            draw.text((32, 30), '          yes ->', fill = cf['color']['font'])
+            draw.text((32, 60), '           no ->', fill = cf['color']['font'])
             disp.LCD_ShowImage(image,0,0)
             time.sleep(1)
             while True:
@@ -223,17 +230,30 @@ while 1:
         #####DO OCR
         if option == 'doocr':
             draw.rectangle((0,0,width,height), outline=0, fill=0)
-            draw.text((0, 0), jobtime, fill = "blue")
-            draw.text((0, 10), 'ocr pdf', fill = "YELLOW")
+            draw.text((0, 0), jobtime, fill = cf['color']['font'])
+            draw.text((0, 10), 'ocr pdf', fill = cf['color']['font'])
             disp.LCD_ShowImage(image,0,0)
-
+            
             for file in document_jpg:
+#                print(file)
+                draw.rectangle((0,0,width,height), outline=0, fill=0)
+                draw.text((0, 0), 'convert and ocr', fill = cf['color']['font'])
+                draw.text((0, 10), os.path.basename(file), fill = cf['color']['font'])
+                draw.text((0, 20), 'to pdf', fill = cf['color']['font'])
+                disp.LCD_ShowImage(image,0,0)
                 os.system("tesseract " + file + ' ' + file[0:-4] + ' -l deu+eng pdf')
             pdfmerge(cf,jobtime,document_jpg)
 
         #####NO OCR
         if option == 'noocr':
+        
             for file in document_jpg:
+                draw.rectangle((0,0,width,height), outline=0, fill=0)
+                draw.text((0, 0), 'convert', fill = cf['color']['font'])
+                draw.text((0, 10), os.path.basename(file), fill = cf['color']['font'])
+                draw.text((0, 20), 'to pdf', fill = cf['color']['font'])
+                disp.LCD_ShowImage(image,0,0)
+
                 image_1 = Image.open(file)
                 im_1 = image_1.convert('RGB')
                 im_1.save(file[0:-4] + '.pdf')
@@ -241,7 +261,7 @@ while 1:
 
         format = 'pdf'
         draw.rectangle((0,0,width,height), outline=0, fill=0)
-        draw.text((0, 30), 'pushover message', fill = "YELLOW")
+        draw.text((0, 30), 'pushover message', fill = cf['color']['font'])
         disp.LCD_ShowImage(image,0,0)
         send_to_pushover(document_jpg[0],jobtime,format,cf)
 
