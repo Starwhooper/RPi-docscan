@@ -1,15 +1,19 @@
 {
    "folder":{
-      "destination":"",
-	  "temp":"/dev/shm"
+      "destination":"/home/pi",
+      "temp":"/dev/shm"
    },
    "filename":{
-	   "prefix":"scan_"
+      "prefix":"s_",
+      "timestamp":"%j-%H%M%S"
    },
-   "devicename":"",
-    "pushover":{
-	  "messages": 1,
-	  "apikey":"",
+   "devicename":"pixma:04A9190D",
+   "pushover":{
+      "messages":1,
+      "apikey":"",
       "userkey":""
-  }
+   },
+   "color":{
+      "font":"YELLOW"
+   }
 }
