@@ -141,7 +141,7 @@ while 1:
     draw.text((32, 60), 'A4 300dpi JPG ->', fill = cf['color']['font'])
     draw.text((32, 90), 'A4 300dpi PDF ->', fill = cf['color']['font'])
     disp.LCD_ShowImage(image,0,0)
-    time.sleep(1)
+    time.sleep(0.2)
 
 #300dpi JPG 
     if GPIO.input(KEY2_PIN) == 0: # button is released
