@@ -19,5 +19,8 @@
    },
    "color":{
       "font":"YELLOW"
-   }
+   },
+   "ocrspace": {
+	   "apikey": ""
+  }
 }
