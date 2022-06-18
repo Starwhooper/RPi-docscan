@@ -2,6 +2,12 @@
 
 Offer a small service with waveshare 144 support on Raspberry Pi Zero to scan documents direct on NAS drive.
 
+Main features:
+* support local OCR with tesseract
+* support remote OCR with OCR Space
+* support little OLED Screen
+* support pushover
+
 ![Display](https://github.com/Starwhooper/RPi-docscan/blob/main/examples/case.jpg)
 
 ## Installation ##
