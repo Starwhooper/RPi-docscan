@@ -19,6 +19,8 @@ import requests
 import subprocess
 import sys
 import time
+import urllib.request
+
 
 ##### import config.json
 try:
@@ -91,6 +93,16 @@ draw = ImageDraw.Draw(image)
 def scantime():
     return(datetime.now().strftime(cf['filename']['timestamp']))
 
+def ocrspace(documentfile):
+#    cf_ocrspace_apikey = 'K85906370488957'
+    
+    payload = {'isOverlayRequired': False, 'apikey': cf['ocrspace']['apikey'], 'isCreateSearchablePdf' : True, 'isSearchablePdfHideTextLayer' : True, 'OCREngine' : 2, }
+    with open(documentfile, 'rb') as f:
+        r = requests.post('https://api.ocr.space/parse/image', files={documentfile: f}, data=payload, )
+    
+    pdfcontent = json.loads(r.content.decode())    
+    urllib.request.urlretrieve(pdfcontent['SearchablePDFURL'], documentfile[0:-4] + '.pdf')
+    
 def pdfmerge(cf,jobtime,documente_jpg):
     merger = PdfFileMerger()
     for file in document_jpg:
@@ -107,7 +119,6 @@ def pdfmerge(cf,jobtime,documente_jpg):
     merger.write(cf['folder']['destination'] + '/' + cf['filename']['prefix'] + jobtime + ".pdf")
     merger.close()
  
-
 def send_to_pushover(source,jobtime,format,cf):
     thumbnailfile = cf['folder']['destination'] + "/thumb." + cf["filename"]["prefix"] + jobtime + ".jpg"
     os.system("convert -thumbnail 200 " + source + " " + thumbnailfile)
@@ -194,9 +205,9 @@ while 1:
         i = 0
 #        document_jpg = [0]
         jobtime = scantime()
-        draw.rectangle((0,0,width,height), outline=0, fill=0)
-        draw.text((0, 0), jobtime, fill = cf['color']['font'])
         while True:
+            draw.rectangle((0,0,width,height), outline=0, fill=0)
+            draw.text((0, 0), jobtime, fill = cf['color']['font'])
             draw.text((0, 10), 'scan 300dpi pdf', fill = cf['color']['font'])
             draw.text((0, 20), 'page: ' + str(i+1), fill = cf['color']['font'])
             disp.LCD_ShowImage(image,0,0)
@@ -229,20 +240,26 @@ while 1:
  
             draw.rectangle((0,0,width,height), outline=0, fill=0)
             draw.text((0, 10), 'OCR ?', fill = cf['color']['font'])
-            draw.text((32, 30), '          yes ->', fill = cf['color']['font'])
-            draw.text((32, 60), '           no ->', fill = cf['color']['font'])
+            draw.text((32, 30), '        local ->', fill = cf['color']['font'])
+            draw.text((32, 60), '       remote ->', fill = cf['color']['font'])
+            draw.text((32, 90), '           no ->', fill = cf['color']['font'])
             disp.LCD_ShowImage(image,0,0)
             time.sleep(1)
             while True:
                 if GPIO.input(KEY1_PIN) == 0: # button is released
                     option = 'doocr'
+                    ocroption = 'localocr'
                     break
                 if GPIO.input(KEY2_PIN) == 0: # button is released
+                    option = 'doocr'
+                    ocroption = 'remoteocr'
+                    break
+                if GPIO.input(KEY3_PIN) == 0: # button is released
                     option = 'noocr'
                     break
             if option == 'doocr' or option == 'noocr':
                 break
-        
+       
         #####DO OCR
         if option == 'doocr':
             draw.rectangle((0,0,width,height), outline=0, fill=0)
@@ -257,7 +274,17 @@ while 1:
                 draw.text((0, 10), os.path.basename(file), fill = cf['color']['font'])
                 draw.text((0, 20), 'to pdf', fill = cf['color']['font'])
                 disp.LCD_ShowImage(image,0,0)
-                os.system("tesseract " + file + ' ' + file[0:-4] + ' -l deu+eng pdf')
+                #local ocr
+                if ocroption == 'localocr':
+                    print('start tesseract:' + file)
+                    os.system("tesseract " + file + ' ' + file[0:-4] + ' -l deu+eng pdf')
+                #remote ocr
+                elif ocroption == 'remoteocr':
+                    print('start ocrspace:' + file)
+                    ocrspace(file)
+                else: print('miss ocroption value')
+               
+                
             pdfmerge(cf,jobtime,document_jpg)
 
         #####NO OCR
