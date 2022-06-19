@@ -21,6 +21,7 @@
       "font":"YELLOW"
    },
    "ocrspace": {
-	   "apikey": ""
+      "apikey": "",
+      "limit": 1000000
   }
 }
