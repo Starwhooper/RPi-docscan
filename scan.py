@@ -200,7 +200,7 @@ while 1:
 
 #300dpi PDF
     if GPIO.input(KEY3_PIN) == 0: # button is released
-        
+        biggestfilesize = 0
         ####scannt ganz fiele JPGs mit _01.jpg
         i = 0
 #        document_jpg = [0]
@@ -217,6 +217,8 @@ while 1:
                 document_jpg = [cf['folder']['temp'] + "/" + cf["filename"]["prefix"] + "" + jobtime + "_" + str(i).zfill(2) + ".jpg"]
 
             os.system("/usr/bin/scanimage > " + document_jpg[i] + " --format=jpeg --resolution=300 --device-name='" + cf['devicename'] + "' -x " + str(cf['papersize']['x']) + " -y " + str(cf['papersize']['y']))
+            filesize = os.path.getsize(document_jpg[i])
+            if filesize >= biggestfilesize: biggestfilesize = filesize
             draw.rectangle((0,0,width,height), outline=0, fill=0)
             draw.text((0, 10), 'ready', fill = cf['color']['font'])
             draw.text((32, 30), '         next ->', fill = cf['color']['font'])
@@ -240,9 +242,13 @@ while 1:
  
             draw.rectangle((0,0,width,height), outline=0, fill=0)
             draw.text((0, 10), 'OCR ?', fill = cf['color']['font'])
-            draw.text((32, 30), '        local ->', fill = cf['color']['font'])
-            draw.text((32, 60), '       remote ->', fill = cf['color']['font'])
-            draw.text((32, 90), '           no ->', fill = cf['color']['font'])
+            draw.text((0, 30), '             local ->', fill = cf['color']['font'])
+            draw.text((0, 55), '            remote ->', fill = cf['color']['font'])
+            if biggestfilesize <= cf['ocrspace']['limit']:
+                draw.text((0, 65), '      size: ' + str(round(biggestfilesize/1024/1024,2)) + 'MB', fill = cf['color']['font'])
+            else:
+                draw.text((0, 65), '      size: ' + str(round(biggestfilesize/1024/1024,2)) + 'MB', fill = 'RED')
+            draw.text((0, 90), '                no ->', fill = cf['color']['font'])
             disp.LCD_ShowImage(image,0,0)
             time.sleep(1)
             while True:
