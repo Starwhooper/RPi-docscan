@@ -102,7 +102,7 @@ def ocrspace(documentfile):
     
     pdfcontent = json.loads(r.content.decode())    
     urllib.request.urlretrieve(pdfcontent['SearchablePDFURL'], documentfile[0:-4] + '.pdf')
-    
+
 def pdfmerge(cf,jobtime,documente_jpg):
     merger = PdfFileMerger()
     for file in document_jpg:
@@ -118,7 +118,7 @@ def pdfmerge(cf,jobtime,documente_jpg):
     print('merge all to ' + cf['folder']['destination'] + '/' + cf['filename']['prefix'] + jobtime + ".pdf")
     merger.write(cf['folder']['destination'] + '/' + cf['filename']['prefix'] + jobtime + ".pdf")
     merger.close()
- 
+
 def send_to_pushover(source,jobtime,format,cf):
     thumbnailfile = cf['folder']['destination'] + "/thumb." + cf["filename"]["prefix"] + jobtime + ".jpg"
     os.system("convert -thumbnail 200 " + source + " " + thumbnailfile)
@@ -201,7 +201,7 @@ while 1:
 #300dpi PDF
     if GPIO.input(KEY3_PIN) == 0: # button is released
         biggestfilesize = 0
-        ####scannt ganz fiele JPGs mit _01.jpg
+        ####scannt ganz viele JPGs mit _01.jpg
         i = 0
 #        document_jpg = [0]
         jobtime = scantime()
@@ -220,9 +220,20 @@ while 1:
             filesize = os.path.getsize(document_jpg[i])
             if filesize >= biggestfilesize: biggestfilesize = filesize
             draw.rectangle((0,0,width,height), outline=0, fill=0)
-            draw.text((0, 10), 'ready', fill = cf['color']['font'])
-            draw.text((32, 30), '         next ->', fill = cf['color']['font'])
-            draw.text((32, 60), '         done ->', fill = cf['color']['font'])
+            draw.text((0, 0), 'ready', fill = cf['color']['font'])
+            draw.text((32, 25), '            next', fill = cf['color']['font'])
+            draw.text((32, 35), '              ->', fill = cf['color']['font'])
+            draw.text((32, 55), '            done', fill = cf['color']['font'])
+            draw.text((32, 65), '              ->', fill = cf['color']['font'])
+
+            #thumbnail and counter
+            thumb = Image.open(document_jpg[i])
+            thumb_x = 100
+            thumb = thumb.resize((thumb_x,int(thumb.height / thumb.width * thumb_x)))
+            image.paste(thumb,(0,15))
+            draw.ellipse((5, 110, 20, 120), fill="BLACK")
+            draw.text((10,110), str(i), fill=cf['color']['font'])
+
             disp.LCD_ShowImage(image,0,0)
             time.sleep(1)
             while True:
@@ -236,8 +247,7 @@ while 1:
             if option == 'done':
                 break
         
-        
-        #####mit ocr in eine PDF oder nur so in eien pdf
+        #####mit ocr in eine PDF oder nur so in eine pdf
         while True:
  
             draw.rectangle((0,0,width,height), outline=0, fill=0)
