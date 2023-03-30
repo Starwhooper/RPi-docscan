@@ -156,8 +156,8 @@ while 1:
         except:
             scannerfound = 0
         if scannerfound == 0:
-            draw.rectangle((0,0,width,height), outline=0, fill=0)
-            draw.text((0, 10), 'wait for scanner', fill = cf['color']['font'])
+            draw.rectangle((0,0,width,height), outline=0, fill="RED")
+            draw.text((10, 10), 'wait for scanner', fill = cf['color']['font'])
             disp.LCD_ShowImage(image,0,0)
             time.sleep(2)
 
