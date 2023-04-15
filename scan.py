@@ -315,7 +315,7 @@ while 1:
 
                 image_1 = Image.open(file)
                 im_1 = image_1.convert('RGB')
-                im_1.save(file[0:-4] + '.pdf')
+                im_1.save(file[0:-4] + '.pdf', resolution=300)
             pdfmerge(cf,jobtime,document_jpg)
 
         format = 'pdf'
