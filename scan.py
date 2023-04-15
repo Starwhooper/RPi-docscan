@@ -232,7 +232,7 @@ while 1:
             thumb = thumb.resize((thumb_x,int(thumb.height / thumb.width * thumb_x)))
             image.paste(thumb,(0,15))
             draw.ellipse((5, 110, 20, 120), fill="BLACK")
-            draw.text((10,110), str(i), fill=cf['color']['font'])
+            draw.text((10,110), str(i+1), fill=cf['color']['font'])
 
             disp.LCD_ShowImage(image,0,0)
             time.sleep(1)
