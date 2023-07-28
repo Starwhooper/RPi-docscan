@@ -177,45 +177,91 @@ while 1:
 
     draw.rectangle((0,0,width,height), outline=0, fill=0)
     draw.text((0, 10), 'ready', fill = cf['color']['font'])
-    draw.text((32, 30), 'A4 600dpi PNG ->', fill = cf['color']['font'])
-    draw.text((32, 60), 'A4 300dpi JPG ->', fill = cf['color']['font'])
-    draw.text((32, 90), 'A4 300dpi PDF ->', fill = cf['color']['font'])
+    draw.text((10, 30), 'Image File ->', fill = cf['color']['font'])
+#    draw.text((32, 60), 'A4 300dpi JPG ->', fill = cf['color']['font'])
+    draw.text((10, 90), 'PDF Document ->', fill = cf['color']['font'])
     disp.LCD_ShowImage(image,0,0)
     time.sleep(0.2)
 
 
-
-#300dpi JPG 
-    if GPIO.input(KEY2_PIN) == 0: # button is released
-        jobtime = scantime()
-        draw.rectangle((0,0,width,height), outline=0, fill=0)
-        draw.text((0, 0), jobtime, fill = cf['color']['font'])
-        draw.text((0, 10), 'scan 300dpi jpg', fill = cf['color']['font'])
-        disp.LCD_ShowImage(image,0,0)
-        document = cf['folder']['destination'] + "/" + cf["filename"]["prefix"] + "" + jobtime + ".jpg"
-        format = 'jpg'
-        print("/usr/bin/scanimage > " + document + " --format=jpeg --resolution=300 --device-name='" + cf['devicename'] + "' -x " + str(cf['papersize']['x']) + " -y " + str(cf['papersize']['y']))
-        os.system("/usr/bin/scanimage > " + document + " --format=jpeg --resolution=300 --device-name='" + cf['devicename'] + "' -x " + str(cf['papersize']['x']) + " -y " + str(cf['papersize']['y']))
-        draw.text((0, 30), 'pushover message', fill = cf['color']['font'])
-        disp.LCD_ShowImage(image,0,0)
-        send_to_pushover(document,jobtime,format,cf)
-
-#600dpi PNG
+#scan Images
     if GPIO.input(KEY1_PIN) == 0: # button is released
+
+        draw.rectangle((0,0,width,height), outline=0, fill=0)
+        draw.text((0, 10), 'which file formant ?', fill = cf['color']['font'])
+        draw.text((10, 30), 'PNG ->', fill = cf['color']['font'])
+        draw.text((10, 60), 'JPEG ->', fill = cf['color']['font'])
+        draw.text((10, 90), 'TIFF ->', fill = cf['color']['font'])
+        disp.LCD_ShowImage(image,0,0)
+        time.sleep(1)
+        
+        fileformat = 'xxx'
+        fileextension = 'xxx'
+        while fileformat == 'xxx':
+            if GPIO.input(KEY1_PIN) == 0: 
+                fileformat = 'png'
+                fileextension = 'png'
+            elif GPIO.input(KEY2_PIN) == 0:
+                fileformat = 'jpeg'
+                fileextension = 'jpg'
+            elif GPIO.input(KEY3_PIN) == 0:
+                fileformat = 'tiff'
+                fileextension = 'tif'
+
+        draw.rectangle((0,0,width,height), outline=0, fill=0)
+        draw.text((0, 10), 'which page formant ?', fill = cf['color']['font'])
+        draw.text((10, 30), 'A4 ->', fill = cf['color']['font'])
+        draw.text((10, 60), 'A5 upright ->', fill = cf['color']['font'])
+        draw.text((10, 90), 'A5 landscape  ->', fill = cf['color']['font'])
+        disp.LCD_ShowImage(image,0,0)
+        time.sleep(1)
+
+        papersize_x = 0
+        papersize_y = 0
+        while papersize_x == 0:
+            if GPIO.input(KEY1_PIN) == 0: 
+                papersize_x = 210
+                papersize_y = 297
+            elif GPIO.input(KEY2_PIN) == 0:
+                papersize_x = 148
+                papersize_y = 210
+            elif GPIO.input(KEY3_PIN) == 0:
+                papersize_x = 210
+                papersize_y = 148
+            
+
+        draw.rectangle((0,0,width,height), outline=0, fill=0)
+        draw.text((0, 10), 'which resolution ?', fill = cf['color']['font'])
+        draw.text((0, 30), '150dpi (to print) ->', fill = cf['color']['font'])
+        draw.text((0, 60), '300dpi (documents) ->', fill = cf['color']['font'])
+        draw.text((0, 90), '600dpi (detailed images)  ->', fill = cf['color']['font'])
+        disp.LCD_ShowImage(image,0,0)
+        time.sleep(1)
+
+        resolution = 0
+
+        while resolution == 0:
+            if GPIO.input(KEY1_PIN) == 0: 
+                resolution = 150
+            elif GPIO.input(KEY2_PIN) == 0:
+                resolution = 300
+            elif GPIO.input(KEY3_PIN) == 0:
+                resolution = 600
+
         jobtime = scantime()
         draw.rectangle((0,0,width,height), outline=0, fill=0)
         draw.text((0, 0), jobtime, fill = cf['color']['font'])
         disp.LCD_ShowImage(image,0,0)
-        draw.text((0, 10), 'scan 600dpi png', fill = cf['color']['font'])
+        draw.text((0, 10), 'scan ' + str(resolution) + 'dpi ' + fileformat, fill = cf['color']['font'])
         disp.LCD_ShowImage(image,0,0)
-        document = cf['folder']['destination'] + "/" + cf["filename"]["prefix"] + "" + jobtime + ".png"
-        format = 'png'
-        os.system("/usr/bin/scanimage > " + document + " --format=png --resolution=600 --device-name='" + cf['devicename'] + "' -x " + str(cf['papersize']['x']) + " -y " + str(cf['papersize']['y']))
+        document = cf['folder']['destination'] + "/" + cf["filename"]["prefix"] + "" + jobtime + "." + fileextension
+        os.system("/usr/bin/scanimage > " + document + " --format=" + fileformat + " --resolution=" + str(resolution) + " --device-name='" + cf['devicename'] + "' -x " + str(papersize_x) + " -y " + str(papersize_y))
         draw.text((0, 30), 'pushover message', fill = cf['color']['font'])
         disp.LCD_ShowImage(image,0,0)
-        send_to_pushover(document,jobtime,format,cf)
+        send_to_pushover(document,jobtime,fileextension,cf)
 
-#300dpi PDF
+
+#scan PDF
     if GPIO.input(KEY3_PIN) == 0: # button is released
         biggestfilesize = 0
         ####scannt ganz viele JPGs mit _01.jpg
