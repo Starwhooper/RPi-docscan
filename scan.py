@@ -161,6 +161,20 @@ while 1:
             disp.LCD_ShowImage(image,0,0)
             time.sleep(2)
 
+    destinationfound = 0
+    while destinationfound == 0:
+        if os.path.exists(cf['folder']['destination']) == True: 
+            destinationfound = 1
+        else:
+            draw.rectangle((0,0,width,height), outline=0, fill="RED")
+            draw.text((5, 10), 'destination not', fill = cf['color']['font'])
+            draw.text((5, 20), 'available', fill = cf['color']['font'])
+            draw.text((5, 40), cf['folder']['destination'][0:19], fill = cf['color']['font'])
+            draw.text((5, 50), cf['folder']['destination'][20:39], fill = cf['color']['font'])
+            draw.text((5, 60), cf['folder']['destination'][40:59], fill = cf['color']['font'])
+            disp.LCD_ShowImage(image,0,0)
+            time.sleep(2)
+
     draw.rectangle((0,0,width,height), outline=0, fill=0)
     draw.text((0, 10), 'ready', fill = cf['color']['font'])
     draw.text((32, 30), 'A4 600dpi PNG ->', fill = cf['color']['font'])
@@ -168,6 +182,8 @@ while 1:
     draw.text((32, 90), 'A4 300dpi PDF ->', fill = cf['color']['font'])
     disp.LCD_ShowImage(image,0,0)
     time.sleep(0.2)
+
+
 
 #300dpi JPG 
     if GPIO.input(KEY2_PIN) == 0: # button is released
@@ -178,6 +194,7 @@ while 1:
         disp.LCD_ShowImage(image,0,0)
         document = cf['folder']['destination'] + "/" + cf["filename"]["prefix"] + "" + jobtime + ".jpg"
         format = 'jpg'
+        print("/usr/bin/scanimage > " + document + " --format=jpeg --resolution=300 --device-name='" + cf['devicename'] + "' -x " + str(cf['papersize']['x']) + " -y " + str(cf['papersize']['y']))
         os.system("/usr/bin/scanimage > " + document + " --format=jpeg --resolution=300 --device-name='" + cf['devicename'] + "' -x " + str(cf['papersize']['x']) + " -y " + str(cf['papersize']['y']))
         draw.text((0, 30), 'pushover message', fill = cf['color']['font'])
         disp.LCD_ShowImage(image,0,0)
@@ -327,4 +344,3 @@ while 1:
         for file in document_jpg:
             os.remove(file)
         del document_jpg
-        
