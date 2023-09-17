@@ -178,7 +178,7 @@ while 1:
     draw.rectangle((0,0,width,height), outline=0, fill=0)
     draw.text((0, 10), 'ready', fill = cf['color']['font'])
     draw.text((10, 30), 'Image File ->', fill = cf['color']['font'])
-#    draw.text((32, 60), 'A4 300dpi JPG ->', fill = cf['color']['font'])
+    draw.text((10, 60), 'Scan Photo ->', fill = cf['color']['font'])
     draw.text((10, 90), 'PDF Document ->', fill = cf['color']['font'])
     disp.LCD_ShowImage(image,0,0)
     time.sleep(0.2)
@@ -259,6 +259,49 @@ while 1:
         draw.text((0, 30), 'pushover message', fill = cf['color']['font'])
         disp.LCD_ShowImage(image,0,0)
         send_to_pushover(document,jobtime,fileextension,cf)
+
+
+#scan Photo
+    if GPIO.input(KEY2_PIN) == 0: # button is released
+
+        fileformat = 'jpeg'
+        fileextension = 'jpg'
+
+        draw.rectangle((0,0,width,height), outline=0, fill=0)
+        draw.text((0, 10), 'which page formant ?', fill = cf['color']['font'])
+        draw.text((10, 30), 'w=13, h=9 ->', fill = cf['color']['font'])
+        draw.text((10, 60), 'w=15, h=10 ->', fill = cf['color']['font'])
+#        draw.text((10, 90), 'A5 landscape  ->', fill = cf['color']['font'])
+        disp.LCD_ShowImage(image,0,0)
+        time.sleep(1)
+
+        papersize_x = 0
+        papersize_y = 0
+        while papersize_x == 0:
+            if GPIO.input(KEY1_PIN) == 0: 
+                papersize_x = 130
+                papersize_y = 90
+            elif GPIO.input(KEY2_PIN) == 0:
+                papersize_x = 150
+                papersize_y = 100
+#            elif GPIO.input(KEY3_PIN) == 0:
+#                papersize_x = 210
+#                papersize_y = 148
+            
+        resolution = 300
+
+        jobtime = scantime()
+        draw.rectangle((0,0,width,height), outline=0, fill=0)
+        draw.text((0, 0), jobtime, fill = cf['color']['font'])
+        disp.LCD_ShowImage(image,0,0)
+        draw.text((0, 10), 'scan ' + str(resolution) + 'dpi ' + fileformat, fill = cf['color']['font'])
+        disp.LCD_ShowImage(image,0,0)
+        document = cf['folder']['destination'] + "/" + cf["filename"]["prefix"] + "" + jobtime + "." + fileextension
+        os.system("/usr/bin/scanimage > " + document + " --format=" + fileformat + " --resolution=" + str(resolution) + " --device-name='" + cf['devicename'] + "' -x " + str(papersize_x) + " -y " + str(papersize_y))
+        draw.text((0, 30), 'pushover message', fill = cf['color']['font'])
+        disp.LCD_ShowImage(image,0,0)
+        send_to_pushover(document,jobtime,fileextension,cf)
+
 
 
 #scan PDF
