@@ -32,6 +32,11 @@ sudo git clone https://github.com/Starwhooper/RPi-docscan
 sudo cp /opt/RPi-docscan/config.json.example /opt/RPi-docscan/config.json
 sudo nano /opt/RPi-status-on-OLED/config.json
 ```
+This Tool used sane. Use this sources to know the right settings:
+* sane documentation: http://www.sane-project.org/man/scanimage.1.html
+* get device-name via: sudo /usr/bin/scanimage -L
+* get all possible setting for your device: /usr/bin/scanimage --device-name="pixma:04A9190D" -A
+
 
 ## Start ##
 add it to rc.local to autostart as boot
