@@ -56,4 +56,4 @@ sudo git pull origin main
 
 ## Hardware ##
 ### Case ###
-Case to enclosure Raspberry Pi zero ans Waveshare 1.44inch LCD HAT_ https://www.thingiverse.com/thing:5324460
+Case to enclosure Raspberry Pi zero ans Waveshare 1.44inch LCD HAT: https://www.printables.com/de/model/258922
