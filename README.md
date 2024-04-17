@@ -14,8 +14,8 @@ Main features:
 install all needed packages to prepare the software environtent of your Raspberry Pi:
 ```bash
 sudo raspi-config
-  and enable Interface type SPI
 ```
+and enable Interface type SPI
 
 ```bash
 sudo apt install python3-pip python3-pil git libatlas-base-dev
