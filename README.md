@@ -37,12 +37,14 @@ This Tool used sane. Use this sources to know the right settings:
 * get device-name via: sudo /usr/bin/scanimage -L
 * get all possible setting for your device: /usr/bin/scanimage --device-name="pixma:04A9190D" -A
 
-
 ## Start ##
-add it to rc.local to autostart as boot
+add it to crontab to autostart as boot
 ```bash
-sudo nano /etc/rc.local
-/opt/RPi-docscan/scan.py
+sudo crontab -e
+```
+add line
+```
+@reboot /opt/RPi-docscan/scan.py
 ```
 
 ## Update ##
