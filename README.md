@@ -18,8 +18,8 @@ sudo raspi-config
 and enable Interface type SPI
 
 ```bash
-sudo apt install python3-pip python3-pil git libatlas-base-dev sane-utils tesseract-ocr-deu
-sudo pip3 install RPi.GPIO psutil numpy netifaces spidev
+sudo apt install python3-pip python3-pil git libatlas-base-dev sane-utils tesseract-ocr-deu imagemagick
+sudo pip3 install RPi.GPIO psutil numpy netifaces spidev Pillow PyPDF2
 ```
 and this tool itself:
 ```bash
